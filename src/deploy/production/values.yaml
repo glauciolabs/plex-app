@@ -1,0 +1,100 @@
+# Default values for app-chart.
+
+replicaCount: 1
+
+image:
+  repository: linuxserver/plex
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Definição de segredos ou outras credenciais (para evitar expor no values.yaml diretamente)
+imagePullSecrets: []
+
+nameOverride: "plex-app-production"
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+# Security context
+podSecurityContext: {}
+securityContext:
+  capabilities:
+    add: ["ALL"]
+
+service:
+  type: NodePort
+  port: 32400
+  nodePort: 30000
+  externalTrafficPolicy: Local
+
+ingress:
+  enabled: true
+  className: "kong"
+  annotations:
+    konghq.com/plugins: vpn-restriction
+  hosts:
+    - host: plex.gcampos.vpn
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []  # TLS configuration can be added here if necessary
+
+resources: {}
+
+nodeSelector:
+  kubernetes.io/hostname: k8s-production-node-1
+
+volumes:
+  - name: config
+    hostPath:
+      path: /k3s-data/plex/config
+  - name: media
+    nfs:
+      server: 100.75.204.128
+      path: /public-files
+      readOnly: true
+  - name: media-private
+    nfs:
+      server: 100.75.204.128
+      path: /private-files
+      readOnly: true
+
+volumeMounts:
+  - name: config
+    mountPath: /config
+    subPath: k8s-production-node-1
+  - name: media
+    mountPath: /media
+  - name: media-private
+    mountPath: /media-private
+
+# Variáveis de ambiente
+env:
+  TZ: "America/Sao_Paulo"
+  VERSION: "docker"
+  PUID: "3000"
+  PGID: "3000"
+  PLEX_CLAIM: "xxxx"
+
+livenessProbe:
+  enabled: false
+
+readinessProbe:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+tolerations: []
+
+affinity: {}

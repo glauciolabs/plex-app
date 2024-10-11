@@ -1,0 +1,16 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: plex-app
+  namespace: plex-app-production
+spec:
+  chart:
+    spec:
+      chart: helm-charts
+      sourceRef:
+        kind: HelmRepository
+        name: helm-charts
+      valuesFiles:
+        - values.yaml
+      version: 0.1.0
+  interval: 5m0s

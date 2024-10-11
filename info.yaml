@@ -1,0 +1,7 @@
+app:
+  name: "plex-app"
+  version: "0.1.0"
+chart:
+  repo: "https://glauciolabs.github.io/helm-charts/"
+  chart_name: "helm-charts"
+  chart_version: "0.1.0"
