@@ -7,4 +7,4 @@ spec:
   interval: 1m
   url: https://github.com/yourusername/plex-app
   ref:
-    branch: main
+    branch: test/plex-app-deploy

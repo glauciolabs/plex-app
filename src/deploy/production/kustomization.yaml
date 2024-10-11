@@ -9,7 +9,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: your-git-repo-name
+    name: plex-app
   values:
     - values.yaml
   resources:
